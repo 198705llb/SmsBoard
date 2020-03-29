@@ -19,8 +19,12 @@ public class SmsBroadController {
     }
 
     @PostMapping("/sms")
-    public String addSmsInfo(@RequestBody SmsInfo smsInfo) {
-        logger.info("add smsInfo ==> {}", JSON.toJSONString(smsInfo));
+    public String addSmsInfo(@RequestBody String smsInfoJSON) {
+        logger.info("add smsInfo ==> {}", JSON.toJSONString(smsInfoJSON));
+        if (smsInfoJSON.contains("{")){
+            smsInfoJSON = smsInfoJSON.substring(smsInfoJSON.indexOf("{"),smsInfoJSON.length());
+        }
+        SmsInfo smsInfo = JSON.parseObject(smsInfoJSON, SmsInfo.class);
         try {
             SmsQuene.add(smsInfo);
         } catch (Exception e) {
