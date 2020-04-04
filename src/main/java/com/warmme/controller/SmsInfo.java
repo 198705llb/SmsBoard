@@ -1,6 +1,9 @@
 package com.warmme.controller;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
+import java.util.Date;
 
 public class SmsInfo implements Serializable {
 
@@ -22,12 +25,14 @@ public class SmsInfo implements Serializable {
     /**
      * 短信存储时间
      */
-    private long storTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date storTime;
 
     /**
      * 短信接收时间
      */
-    private long receiveTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date receiveTime;
 
     public String getReceiverPhone() {
         return receiverPhone;
@@ -53,21 +58,19 @@ public class SmsInfo implements Serializable {
         this.msg = msg;
     }
 
-    public long getStorTime() {
+    public Date getStorTime() {
         return storTime;
     }
 
-    public void setStorTime(long storTime) {
+    public void setStorTime(Date storTime) {
         this.storTime = storTime;
     }
 
-    public long getReceiveTime() {
+    public Date getReceiveTime() {
         return receiveTime;
     }
 
-    public void setReceiveTime(long receiveTime) {
+    public void setReceiveTime(Date receiveTime) {
         this.receiveTime = receiveTime;
     }
-
-
 }

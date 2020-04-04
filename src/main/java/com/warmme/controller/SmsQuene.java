@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
@@ -45,7 +46,7 @@ public class SmsQuene {
         if (smsInfoQue.size() >= MAX_QUESIZE) {
             smsInfoQue.removeLast();
         }
-        smsInfo.setStorTime(System.currentTimeMillis());
+        smsInfo.setStorTime(new Date());
         smsInfoQue.addFirst(smsInfo);
     }
 
