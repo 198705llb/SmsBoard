@@ -30,7 +30,7 @@ public class SmsQuene {
             public void run() {
                 clearTimeOut();
             }
-        },1000,5,TimeUnit.MINUTES);
+        },1,5,TimeUnit.MINUTES);
     }
 
     /**
@@ -89,24 +89,35 @@ public class SmsQuene {
      *
      */
     private static void clearTimeOut(){
-        Collection<BlockingDeque<SmsInfo>> values = map.values();
-        if (CollectionUtils.isEmpty(values)){
+        logger.info("clearTimeOut task ==> start . ");
+        Set<Map.Entry<String, BlockingDeque<SmsInfo>>> entries = map.entrySet();
+        if (CollectionUtils.isEmpty(entries)){
+            logger.info("clearTimeOut task ==> empty . ");
             return;
         }
-        for (BlockingDeque<SmsInfo> value : values) {
-            if (CollectionUtils.isEmpty(value)){
+        for (Map.Entry<String, BlockingDeque<SmsInfo>> entry : entries) {
+            String phone = entry.getKey();
+            BlockingDeque<SmsInfo> smsInfoBlockingDeque = entry.getValue();
+            logger.info("clearTimeOut task ==> start .  phone:{}",phone);
+            if (CollectionUtils.isEmpty(smsInfoBlockingDeque)){
+                logger.info("clearTimeOut task ==> doing . phone:{} , value is empty",phone);
                 continue;
             }
-            while(value.size()>0){
-                SmsInfo last = value.getLast();
+            logger.info("clearTimeOut task ==> doing . phone:{} , value is not empty , start check . ",phone);
+            while(smsInfoBlockingDeque.size()>0){
+                SmsInfo last = smsInfoBlockingDeque.getLast();
                 if (last==null|| last.getStorTime()==null || last.getStorTime().getTime()<(System.currentTimeMillis()-1000*60*30)){
-                 value.removeLast();
+                    SmsInfo smsInfo = smsInfoBlockingDeque.removeLast();
+                    logger.info("clearTimeOut task ==> removed . phone:{} , value :{} ",phone,JSON.toJSON(smsInfo));
                 }else {
+                    logger.info("clearTimeOut task ==> not time out . phone:{} , value :{} ",phone,JSON.toJSON(last));
                     break;
                 }
             }
+            logger.info("clearTimeOut task ==> end .  phone:{}",phone);
 
         }
+        logger.info("clearTimeOut task ==> end .");
     }
 
 }

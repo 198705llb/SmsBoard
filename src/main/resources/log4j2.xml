@@ -1,18 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?> <configuration>
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error">
+
+    <properties>
+        <property name="LOG_HOME">logs</property>
+        <property name="FILE_NAME">SmsBoard.log</property>
+        <property name="PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [%logger{36}]   %msg%n</property>
+    </properties>
     <Appenders>
-        <Console name="CONSOLE" target="SYSTEM_OUT">
-            <PatternLayout charset="UTF-8" pattern="[%-5p] %d %c - %m%n" />
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout>
+                <MarkerPatternSelector defaultPattern="${PATTERN}">
+                    <PatternMatch key="CLASS" pattern="${PATTERN}"/>
+                </MarkerPatternSelector>
+            </PatternLayout>
         </Console>
+        <RollingFile name="file" fileName="${LOG_HOME}/${FILE_NAME}"
+                     filePattern="${LOG_HOME}/${FILE_NAME}-%i-log.gz">
+            <PatternLayout>
+                <pattern>${PATTERN}</pattern>
+            </PatternLayout>
 
-        <File name="File" fileName="logs/SmsBoard.log">
-            <PatternLayout pattern="%m%n" />
-        </File>
+            <SizeBasedTriggeringPolicy size="20 MB" />
+        </RollingFile>
     </Appenders>
-
     <Loggers>
-        <root level="debug">
-            <AppenderRef ref="CONSOLE" />
-            <AppenderRef ref="File" />
-        </root>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="file" />
+        </Root>
     </Loggers>
-</configuration>
+</Configuration>
