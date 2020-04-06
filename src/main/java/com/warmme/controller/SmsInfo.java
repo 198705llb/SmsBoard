@@ -1,5 +1,6 @@
 package com.warmme.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -26,12 +27,14 @@ public class SmsInfo implements Serializable {
      * 短信存储时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",timezone="GMT+8")
     private Date storTime;
 
     /**
      * 短信接收时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",timezone="GMT+8")
     private Date receiveTime;
 
     public String getReceiverPhone() {

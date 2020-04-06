@@ -3,15 +3,11 @@ package com.warmme.controller;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +21,17 @@ public class SmsQuene {
      ***/
     private static int MAX_QUESIZE = 5;
     private static Map<String, BlockingDeque<SmsInfo>> map = new ConcurrentHashMap<>();
+
+    private static ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+
+    static {
+        service.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                clearTimeOut();
+            }
+        },1000,5,TimeUnit.MINUTES);
+    }
 
     /**
      * 添加信息
@@ -76,6 +83,30 @@ public class SmsQuene {
             return null;
         }
         return smsInfos.stream().collect(Collectors.toList());
+    }
+
+    /**清除超时短信
+     *
+     */
+    private static void clearTimeOut(){
+        Collection<BlockingDeque<SmsInfo>> values = map.values();
+        if (CollectionUtils.isEmpty(values)){
+            return;
+        }
+        for (BlockingDeque<SmsInfo> value : values) {
+            if (CollectionUtils.isEmpty(value)){
+                continue;
+            }
+            while(value.size()>0){
+                SmsInfo last = value.getLast();
+                if (last==null|| last.getStorTime()==null || last.getStorTime().getTime()<(System.currentTimeMillis()-1000*60*30)){
+                 value.removeLast();
+                }else {
+                    break;
+                }
+            }
+
+        }
     }
 
 }

@@ -4,7 +4,7 @@
             <PatternLayout charset="UTF-8" pattern="[%-5p] %d %c - %m%n" />
         </Console>
 
-        <File name="File" fileName="/logs/SmsBoard.log">
+        <File name="File" fileName="logs/SmsBoard.log">
             <PatternLayout pattern="%m%n" />
         </File>
     </Appenders>
