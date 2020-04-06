@@ -19,7 +19,6 @@
             <PatternLayout>
                 <pattern>${PATTERN}</pattern>
             </PatternLayout>
-
             <SizeBasedTriggeringPolicy size="20 MB" />
         </RollingFile>
     </Appenders>
